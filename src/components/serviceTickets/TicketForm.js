@@ -12,7 +12,7 @@ export const TicketForm = () => {
     const saveTicket = (event) => {
         event.preventDefault()
 
-        if (ticket.emergency === "") {
+        if (ticket.description === "") {
             window.alert("Please enter a description for the ticket")
         } else {
             const fetchOptions = {
