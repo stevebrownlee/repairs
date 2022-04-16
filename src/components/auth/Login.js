@@ -4,22 +4,24 @@ import { useHistory } from "react-router-dom"
 import "./Login.css"
 
 export const Login = () => {
-    const [email, set] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
     const existDialog = useRef()
     const history = useHistory()
 
-    const existingUserCheck = () => {
-        return fetch(`http://localhost:8088/customers?email=${email}`)
-            .then(res => res.json())
-            .then(user => user.length ? user[0] : false)
-    }
-
     const handleLogin = (e) => {
         e.preventDefault()
-        existingUserCheck()
-            .then(exists => {
-                if (exists) {
-                    localStorage.setItem("honey_customer", exists.id)
+        fetch(`http://localhost:8000/login`, {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.json())
+            .then(authInfo => {
+                if (authInfo.valid) {
+                    localStorage.setItem("honey_customer", authInfo.token)
                     history.push("/")
                 } else {
                     existDialog.current.showModal()
@@ -40,11 +42,19 @@ export const Login = () => {
                     <h2>Please sign in</h2>
                     <fieldset>
                         <label htmlFor="inputEmail"> Email address </label>
-                        <input type="email"
-                            onChange={evt => set(evt.target.value)}
+                        <input type="email" id="inputEmail"
+                            onChange={evt => setEmail(evt.target.value)}
                             className="form-control"
                             placeholder="Email address"
                             required autoFocus />
+                    </fieldset>
+                    <fieldset>
+                        <label htmlFor="inputPassword"> Password </label>
+                        <input type="password" id="inputPassword"
+                            onChange={evt => setPassword(evt.target.value)}
+                            className="form-control"
+                            placeholder="Password"
+                            required />
                     </fieldset>
                     <fieldset>
                         <button type="submit">
