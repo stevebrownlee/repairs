@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { fetchIt } from "../../utils/fetchIt"
 
 export const CustomerList = () => {
     const [customers, setCustomers] = useState([])
@@ -6,14 +7,8 @@ export const CustomerList = () => {
 
     useEffect(
         () => {
-            console.log("Initial useEffect")
-            fetch("http://localhost:8088/customers")
-                .then(res => res.json())
-                .then((customerArray) => {
-                    setCustomers(customerArray)
-                })
-        },
-        []
+            fetchIt("http://localhost:8000/customers").then(setCustomers)
+        }, []
     )
 
     useEffect(

@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { fetchIt } from "../../utils/fetchIt"
 
 export const Employee = () => {
-    const [employee, set] = useState({})  // State variable for current employee object
+    const [ employee, set ] = useState({})  // State variable for current employee object
     const { employeeId } = useParams()
 
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees/${employeeId}`)
-            .then(res => res.json())
-            .then(set)
+            fetchIt(`http://localhost:8000/employees/${employeeId}`).then(set)
         },
         [ employeeId ]  // Above function runs when the value of employeeId change
     )

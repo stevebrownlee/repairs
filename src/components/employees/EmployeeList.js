@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link, useHistory } from "react-router-dom"
+import { fetchIt } from "../../utils/fetchIt"
 
 export const EmployeeList = () => {
     const [employees, changeEmployee] = useState([])
@@ -8,8 +9,7 @@ export const EmployeeList = () => {
 
     useEffect(
         () => {
-            fetch("http://localhost:8088/employees")
-                .then(res => res.json())
+            fetchIt("http://localhost:8000/employees")
                 .then((employeesFromAPI) => {
                     changeEmployee(employeesFromAPI)
                 })

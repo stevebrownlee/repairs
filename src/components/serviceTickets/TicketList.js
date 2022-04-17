@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Link, useHistory } from "react-router-dom"
+import { fetchIt } from "../../utils/fetchIt"
 import "./Tickets.css"
 
 export const TicketList = () => {
@@ -7,16 +8,9 @@ export const TicketList = () => {
     const [active, setActive] = useState("")
     const history = useHistory()
 
-    useEffect(
-        () => {
-            fetch("http://localhost:8088/serviceTickets?_expand=employee&_expand=customer")
-                .then(res => res.json())
-                .then((data) => {
-                    updateTickets(data)
-                })
-        },
-        []
-    )
+    useEffect(() => {
+        fetchIt("http://localhost:8000/tickets").then(updateTickets)
+    }, [])
 
     useEffect(() => {
         const activeTicketCount = tickets.filter(t => t.dateCompleted === "").length
@@ -28,7 +22,7 @@ export const TicketList = () => {
             <div>
                 <button onClick={() => history.push("/tickets/create")}>Create Ticket</button>
             </div>
-            { active }
+            {active}
             {
                 tickets.map(
                     (ticket) => {

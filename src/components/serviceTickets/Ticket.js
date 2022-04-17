@@ -8,7 +8,7 @@ export const Ticket = () => {
 
     // Function to fetch a single ticket, with customer and employee embedded
     const fetchTicket = () => {
-        return fetch(`http://localhost:8088/serviceTickets/${ticketId}?_expand=customer&_expand=employee`)
+        return fetch(`http://localhost:8000/serviceTickets/${ticketId}?_expand=customer&_expand=employee`)
             .then(res => res.json())
             .then(set)
     }
@@ -24,7 +24,7 @@ export const Ticket = () => {
     // Fetch all employees
     useEffect(
         () => {
-            fetch(`http://localhost:8088/employees`)
+            fetch(`http://localhost:8000/employees`)
                 .then(res => res.json())
                 .then(syncEmployees)
         },
@@ -44,7 +44,7 @@ export const Ticket = () => {
         }
 
         // Perform the PUT HTTP request to replace the resource
-        fetch(`http://localhost:8088/serviceTickets/${ticketId}`, {
+        fetch(`http://localhost:8000/serviceTickets/${ticketId}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
