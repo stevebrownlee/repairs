@@ -13,28 +13,55 @@ export const TicketList = () => {
     }, [])
 
     useEffect(() => {
-        const activeTicketCount = tickets.filter(t => t.dateCompleted === "").length
+        const activeTicketCount = tickets.filter(t => t.date_completed === null).length
         setActive(`There are ${activeTicketCount} open tickets`)
     }, [tickets])
 
     return (
         <>
-            <div>
-                <button onClick={() => history.push("/tickets/create")}>Create Ticket</button>
+            <div className="actions">
+                <button className="actions__create" onClick={() => history.push("/tickets/create")}>Create Ticket</button>
             </div>
-            {active}
-            {
-                tickets.map(
-                    (ticket) => {
-                        return <div key={`ticket--${ticket.id}`}>
-                            <p className={`ticket ${ticket.emergency ? 'emergency' : ''}`}>
-                                {ticket.emergency ? "🚑" : ""} <Link to={`/tickets/${ticket.id}`}>{ticket.description}</Link> submitted by {ticket.customer.name} and worked on by {ticket.employee.name}
-                            </p>
-                        </div>
-                    }
-                )
-            }
-
+            <div className="activeTickets">
+                {active}
+            </div>
+            <article className="tickets">
+                {
+                    tickets.map(
+                        (ticket) => {
+                            return <section
+                                className={`ticket ${ticket.emergency ? 'emergency' : ''}`}
+                                key={`ticket--${ticket.id}`}>
+                                <header className="ticket__header">
+                                    <div className="ticket__customer">
+                                        <Link to={`/tickets/${ticket.id}`}>Ticket #{ticket.id}</Link>: {ticket.customer.full_name}
+                                    </div>
+                                </header>
+                                <p className="ticket__body">
+                                    <i className="ticket__icon">{ticket.emergency ? "🚑" : ""}</i>
+                                    {ticket.description}
+                                </p>
+                                <footer className="ticket__footer">
+                                    <div className="ticket__employee">
+                                        {
+                                            ticket.date_completed === null
+                                                ? `Assigned to ${ticket.employee.name}`
+                                                : `Completed by ${ticket.employee.name} on ${ticket.date_completed}`
+                                        }
+                                    </div>
+                                    <div>
+                                        {
+                                            ticket.date_completed === null
+                                                ? <span className="status--in-progress">In progress</span>
+                                                : ""
+                                        }
+                                    </div>
+                                </footer>
+                            </section>
+                        }
+                    )
+                }
+            </article>
         </>
     )
 }

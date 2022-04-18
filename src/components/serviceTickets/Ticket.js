@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { fetchIt } from "../../utils/fetchIt"
 
 export const Ticket = () => {
     const [ticket, set] = useState({})  // State variable for current ticket object
@@ -8,8 +9,7 @@ export const Ticket = () => {
 
     // Function to fetch a single ticket, with customer and employee embedded
     const fetchTicket = () => {
-        return fetch(`http://localhost:8000/serviceTickets/${ticketId}?_expand=customer&_expand=employee`)
-            .then(res => res.json())
+        return fetchIt(`http://localhost:8000/tickets/${ticketId}`)
             .then(set)
     }
 
@@ -21,11 +21,9 @@ export const Ticket = () => {
         [ ticketId ]  // Above function runs when the value of ticketId change
     )
 
-    // Fetch all employees
     useEffect(
         () => {
-            fetch(`http://localhost:8000/employees`)
-                .then(res => res.json())
+            fetchIt("http://localhost:8000/employees")
                 .then(syncEmployees)
         },
         []  // Empty dependency array only reacts to JSX initial rendering
@@ -36,34 +34,27 @@ export const Ticket = () => {
 
         // Construct a new object to replace the existing one in the API
         const updatedTicket = {
-            customerId: ticket.customerId,
-            employeeId: parseInt(evt.target.value),
-            description: ticket.description,
-            emergency: ticket.emergency,
-            dateCompleted: new Date().toLocaleDateString("en-US")
+            employee: parseInt(evt.target.value),
         }
 
         // Perform the PUT HTTP request to replace the resource
-        fetch(`http://localhost:8000/serviceTickets/${ticketId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(updatedTicket)
-        })
-            .then(() => {
-                fetchTicket()
-            })
+        fetchIt(
+            `http://localhost:8000/tickets/${ticketId}`,
+            {
+                method: "PUT",
+                body: JSON.stringify(updatedTicket)
+            }
+        ).then(fetchTicket)
     }
 
     return (
         <>
             <section className="ticket">
                 <h3 className="ticket__description">{ticket.description}</h3>
-                <div className="ticket__customer">Submitted by {ticket.customer?.name}</div>
-                <div className="ticket__employee">Assigned to
+                <div className="ticket__customer">Submitted by {ticket.customer?.full_name}</div>
+                <div className="ticket__employee">Assigned to {" "}
                     <select
-                        value={ ticket.employeeId }
+                        value={ ticket.employee.id } // TODO: value={ ticket.employeeId }
                         onChange={ updateTicket }>
                         {
                             employees.map(e => <option key={`employee--${e.id}`} value={e.id}>{e.name}</option>)
