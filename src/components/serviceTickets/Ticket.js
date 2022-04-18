@@ -18,7 +18,7 @@ export const Ticket = () => {
         () => {
             fetchTicket()
         },
-        [ ticketId ]  // Above function runs when the value of ticketId change
+        [ticketId]  // Above function runs when the value of ticketId change
     )
 
     useEffect(
@@ -47,20 +47,43 @@ export const Ticket = () => {
         ).then(fetchTicket)
     }
 
+    const employeePicker = (ticket) => {
+        return <div className="ticket__employee">Assigned to {" "}
+            <select
+                value={ticket?.employee?.id} // TODO: value={ ticket.employeeId }
+                onChange={updateTicket}>
+                {
+                    employees.map(e => <option key={`employee--${e.id}`} value={e.id}>{e.name}</option>)
+                }
+            </select>
+        </div>
+
+    }
+
     return (
         <>
             <section className="ticket">
-                <h3 className="ticket__description">{ticket.description}</h3>
-                <div className="ticket__customer">Submitted by {ticket.customer?.full_name}</div>
-                <div className="ticket__employee">Assigned to {" "}
-                    <select
-                        value={ ticket.employee.id } // TODO: value={ ticket.employeeId }
-                        onChange={ updateTicket }>
+                <h3 className="ticket__description">Description</h3>
+                <div>{ticket.description}</div>
+
+                <footer className="ticket__footer ticket__footer--detail">
+                    <div className="ticket__customer footerItem">Submitted by {ticket.customer?.full_name}</div>
+                    <div className="ticket__employee footerItem">
                         {
-                            employees.map(e => <option key={`employee--${e.id}`} value={e.id}>{e.name}</option>)
+                            ticket.date_completed === null
+                                ? employeePicker()
+                                : `Completed by ${ticket.employee?.name} on ${ticket.date_completed}`
                         }
-                    </select>
-                </div>
+                    </div>
+                    <div className="footerItem">
+                        {
+                            ticket.date_completed === null
+                                ? <span className="status--in-progress">In progress</span>
+                                : ""
+                        }
+                    </div>
+                </footer>
+
             </section>
         </>
     )

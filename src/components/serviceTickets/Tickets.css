@@ -44,6 +44,16 @@
     font-size: smaller;
 }
 
+.ticket__footer--detail {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: row;
+}
+
+.footerItem {
+    flex: 1;
+}
+
 .emergency {
     background-color: rgb(255, 199, 199);
 }
