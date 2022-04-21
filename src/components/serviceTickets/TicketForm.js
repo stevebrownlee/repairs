@@ -15,7 +15,7 @@ export const TicketForm = () => {
         const newTicket = {
             description: ticket.description,
             emergency: ticket.emergency,
-            customerId: parseInt(localStorage.getItem("honey_customer")),
+            customerId: parseInt(localStorage.getItem("honeyrae")),
             employeeId: 1,
             dateCompleted: ""
         }

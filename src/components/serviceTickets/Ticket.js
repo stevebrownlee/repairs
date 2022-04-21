@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { fetchIt } from "../../utils/fetchIt"
+import { isStaff } from "../../utils/isStaff"
 
 export const Ticket = () => {
     const [ticket, set] = useState({})  // State variable for current ticket object
@@ -48,16 +49,20 @@ export const Ticket = () => {
     }
 
     const employeePicker = (ticket) => {
-        return <div className="ticket__employee">Assigned to {" "}
-            <select
-                value={ticket?.employee?.id} // TODO: value={ ticket.employeeId }
-                onChange={updateTicket}>
-                {
-                    employees.map(e => <option key={`employee--${e.id}`} value={e.id}>{e.name}</option>)
-                }
-            </select>
-        </div>
-
+        if (isStaff()) {
+            return <div className="ticket__employee">Assigned to {" "}
+                <select
+                    value={ticket?.employee?.id} // TODO: value={ ticket.employeeId }
+                    onChange={updateTicket}>
+                    {
+                        employees.map(e => <option key={`employee--${e.id}`} value={e.id}>{e.name}</option>)
+                    }
+                </select>
+            </div>
+        }
+        else {
+            return <div className="ticket__employee">Assigned to {ticket?.employee.full_name}</div>
+        }
     }
 
     return (
@@ -67,11 +72,11 @@ export const Ticket = () => {
                 <div>{ticket.description}</div>
 
                 <footer className="ticket__footer ticket__footer--detail">
-                    <div className="ticket__customer footerItem">Submitted by {ticket.customer?.full_name}</div>
+                    <div className=" footerItem">Submitted by {ticket.customer?.full_name}</div>
                     <div className="ticket__employee footerItem">
                         {
                             ticket.date_completed === null
-                                ? employeePicker()
+                                ? employeePicker(ticket)
                                 : `Completed by ${ticket.employee?.name} on ${ticket.date_completed}`
                         }
                     </div>

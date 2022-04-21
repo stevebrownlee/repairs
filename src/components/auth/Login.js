@@ -4,8 +4,8 @@ import { useHistory } from "react-router-dom"
 import "./Login.css"
 
 export const Login = () => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("tyler@hillard.com")
+    const [password, setPassword] = useState("django")
     const existDialog = useRef()
     const history = useHistory()
 
@@ -21,7 +21,7 @@ export const Login = () => {
             .then(res => res.json())
             .then(authInfo => {
                 if (authInfo.valid) {
-                    localStorage.setItem("honey_customer", authInfo.token)
+                    localStorage.setItem("honeyrae", JSON.stringify(authInfo))
                     history.push("/")
                 } else {
                     existDialog.current.showModal()
@@ -43,6 +43,7 @@ export const Login = () => {
                     <fieldset>
                         <label htmlFor="inputEmail"> Email address </label>
                         <input type="email" id="inputEmail"
+                            value={email}
                             onChange={evt => setEmail(evt.target.value)}
                             className="form-control"
                             placeholder="Email address"
@@ -51,6 +52,7 @@ export const Login = () => {
                     <fieldset>
                         <label htmlFor="inputPassword"> Password </label>
                         <input type="password" id="inputPassword"
+                            value={password}
                             onChange={evt => setPassword(evt.target.value)}
                             className="form-control"
                             placeholder="Password"

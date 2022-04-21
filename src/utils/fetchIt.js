@@ -10,7 +10,8 @@ export const fetchIt = (url, kwargs = { method: "GET", body: null, token: null }
     }
     else {
         try {
-            const token = localStorage.getItem("honey_customer")
+            const auth = localStorage.getItem("honeyrae")
+            const token = JSON.parse(auth).token
             options.headers.Authorization = `Token ${token}`
 
         } catch (error) {

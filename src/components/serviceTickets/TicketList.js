@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link, useHistory } from "react-router-dom"
 import { fetchIt } from "../../utils/fetchIt"
+import { isStaff } from "../../utils/isStaff"
 import "./Tickets.css"
 
 export const TicketList = () => {
@@ -20,7 +21,13 @@ export const TicketList = () => {
     return (
         <>
             <div className="actions">
-                <button className="actions__create" onClick={() => history.push("/tickets/create")}>Create Ticket</button>
+            {
+                isStaff()
+                    ? ""
+                    : <button className="actions__create"
+                              onClick={() => history.push("/tickets/create")}>Create Ticket</button>
+            }
+
             </div>
             <div className="activeTickets">
                 {active}
@@ -45,8 +52,8 @@ export const TicketList = () => {
                                     <div className="ticket__employee">
                                         {
                                             ticket.date_completed === null
-                                                ? `Assigned to ${ticket.employee.name}`
-                                                : `Completed by ${ticket.employee.name} on ${ticket.date_completed}`
+                                                ? `Assigned to ${ticket.employee.full_name}`
+                                                : `Completed by ${ticket.employee.full_name} on ${ticket.date_completed}`
                                         }
                                     </div>
                                     <div>
