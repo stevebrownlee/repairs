@@ -8,6 +8,10 @@ export const ApplicationViews = () => {
 
     return (
         <>
+            <Route exact path="/">
+                <TicketList />
+            </Route>
+
             <Route exact path="/tickets">
                 <TicketList />
             </Route>

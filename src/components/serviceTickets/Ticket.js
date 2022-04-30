@@ -1,31 +1,37 @@
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { useCallback } from "react/cjs/react.production.min"
 import { fetchIt } from "../../utils/fetchIt"
 import { isStaff } from "../../utils/isStaff"
 
 export const Ticket = () => {
-    const [ticket, set] = useState({})  // State variable for current ticket object
+    const [ticket, loadTicket] = useState({})  // State variable for current ticket object
     const [employees, syncEmployees] = useState([])  // State variable for array of employees
     const { ticketId } = useParams()  // Variable storing the route parameter
 
-    // Function to fetch a single ticket, with customer and employee embedded
-    const fetchTicket = () => {
+    /*
+        Function to fetch a single ticket, with customer and employee embedded
+        Wrapped in a useCallback because the useEffect below is dependent upon
+        the state mutator (loadTicket function) used here.
+    */
+    const fetchTicket = useCallback(() => {
         return fetchIt(`http://localhost:8000/tickets/${ticketId}`)
-            .then(set)
-    }
+            .then(loadTicket)
+            .catch(() => loadTicket({}))
+    }, [ticketId])
 
-    // Invoke fetchTicket() when the parameter value changes
     useEffect(
         () => {
             fetchTicket()
         },
-        [ticketId]  // Above function runs when the value of ticketId change
+        [ticketId, fetchTicket]
     )
 
     useEffect(
         () => {
             fetchIt("http://localhost:8000/employees")
                 .then(syncEmployees)
+                .catch(() => syncEmployees([]))
         },
         []  // Empty dependency array only reacts to JSX initial rendering
     )

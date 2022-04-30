@@ -10,12 +10,19 @@ export const TicketList = () => {
     const history = useHistory()
 
     useEffect(() => {
-        fetchIt("http://localhost:8000/tickets").then(updateTickets)
+        fetchIt("http://localhost:8000/tickets")
+            .then(updateTickets)
+            .catch(() => updateTickets([]))
     }, [])
 
     useEffect(() => {
         const activeTicketCount = tickets.filter(t => t.date_completed === null).length
-        setActive(`There are ${activeTicketCount} open tickets`)
+        if (isStaff()) {
+            setActive(`There are ${activeTicketCount} open tickets`)
+        }
+        else {
+            setActive(`You have ${activeTicketCount} open tickets`)
+        }
     }, [tickets])
 
     return (
@@ -52,8 +59,8 @@ export const TicketList = () => {
                                     <div className="ticket__employee">
                                         {
                                             ticket.date_completed === null
-                                                ? `Assigned to ${ticket.employee.full_name}`
-                                                : `Completed by ${ticket.employee.full_name} on ${ticket.date_completed}`
+                                                ? `Assigned to ${ticket?.employee?.full_name ?? "no one, yet"}`
+                                                : `Completed by ${ticket?.employee?.full_name} on ${ticket.date_completed}`
                                         }
                                     </div>
                                     <div>

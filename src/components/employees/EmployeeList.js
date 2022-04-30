@@ -3,16 +3,15 @@ import { Link, useHistory } from "react-router-dom"
 import { fetchIt } from "../../utils/fetchIt"
 
 export const EmployeeList = () => {
-    const [employees, changeEmployee] = useState([])
+    const [employees, changeEmployees] = useState([])
     const [specialties, setSpecial] = useState("")
     const history = useHistory()
 
     useEffect(
         () => {
             fetchIt("http://localhost:8000/employees")
-                .then((employeesFromAPI) => {
-                    changeEmployee(employeesFromAPI)
-                })
+                .then(changeEmployees)
+                .catch(() => changeEmployees([]))
         },
         []
     )

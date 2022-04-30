@@ -7,13 +7,14 @@ export const CustomerList = () => {
 
     useEffect(
         () => {
-            fetchIt("http://localhost:8000/customers").then(setCustomers)
+            fetchIt("http://localhost:8000/customers")
+                .then(setCustomers)
+                .catch(() => setCustomers([]))
         }, []
     )
 
     useEffect(
         () => {
-            console.log("Customers state changed", customers)
             if (customers.length === 1) {
                 updateMessage("You have 1 customer")
             }
@@ -28,7 +29,7 @@ export const CustomerList = () => {
         <>
             <div>{totalCustomerMessage}</div>
             {
-                customers.slice(0, 5).map(
+                customers.map(
                     (customerObject) => {
                         return <p key={`customer--${customerObject.id}`}>{customerObject.name}</p>
                     }

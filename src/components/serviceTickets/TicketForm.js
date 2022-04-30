@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import { useHistory } from "react-router-dom"
+import { fetchIt } from "../../utils/fetchIt"
 
 export const TicketForm = () => {
 
@@ -15,9 +16,7 @@ export const TicketForm = () => {
         const newTicket = {
             description: ticket.description,
             emergency: ticket.emergency,
-            customerId: parseInt(localStorage.getItem("honeyrae")),
-            employeeId: 1,
-            dateCompleted: ""
+            customerId: parseInt(localStorage.getItem("honeyrae"))
         }
 
         const fetchOption = {
@@ -28,7 +27,7 @@ export const TicketForm = () => {
             body: JSON.stringify(newTicket)
         }
 
-        return fetch("http://localhost:8000/serviceTickets", fetchOption)
+        return fetchIt("http://localhost:8000/tickets", fetchOption)
             .then(() => {
                 history.push("/tickets")
             })
