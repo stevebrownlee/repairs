@@ -69,7 +69,7 @@ export const EmployeeForm = () => {
                 </div>
             </fieldset>
             <button onClick={hireEmployee} className="btn btn-primary">
-                Hire Employee
+                Hire New Employee
             </button>
         </form>
     )
